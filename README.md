@@ -1,1 +1,2 @@
-# InkWell Frontend
+# InkWell-Frontend
+The Blogging Platform Frontend 
