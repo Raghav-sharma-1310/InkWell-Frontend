@@ -3,6 +3,11 @@
  * These comments identify why the styles are grouped here instead of repeated inside components.
  */
 /* Base styles keep typography, layout, and theme behavior consistent across the frontend. */
+/* Footer styles */
+@import './styles/footer.css';
+/* Info modal styles (used by footer information links) */
+@import './styles/info-modal.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

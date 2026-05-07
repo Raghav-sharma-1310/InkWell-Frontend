@@ -1,0 +1,206 @@
+/*
+ * Footer-specific styles for the Inkwell platform.
+ * Uses BEM naming convention to avoid conflicts with existing styles.
+ * All color tokens reference the existing Tailwind theme (brand, slate, etc.).
+ */
+
+/* ─── Footer Container ─────────────────────── */
+.inkwell-footer {
+  @apply relative border-t border-slate-200 bg-white transition-colors duration-300;
+  overflow: hidden;
+}
+.dark .inkwell-footer {
+  @apply border-slate-800 bg-slate-950;
+}
+
+/* Subtle gradient accent at top */
+.inkwell-footer__accent {
+  @apply h-[2px] w-full;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #0f766e 20%,
+    #14b8a6 50%,
+    #0f766e 80%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+.dark .inkwell-footer__accent {
+  opacity: 0.3;
+}
+
+/* ─── Grid Layout (compact) ─────────────────── */
+.inkwell-footer__grid {
+  @apply grid gap-6 py-8;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .inkwell-footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .inkwell-footer__grid {
+    grid-template-columns: 1.6fr 0.8fr 0.8fr 1fr;
+    gap: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* ─── Brand Column ──────────────────────────── */
+.inkwell-footer__brand-col {
+  @apply flex flex-col gap-3;
+}
+
+.inkwell-footer__logo-link {
+  @apply inline-flex items-center gap-2 no-underline;
+}
+.inkwell-footer__logo-icon {
+  @apply flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white transition-transform duration-200;
+}
+.inkwell-footer__logo-link:hover .inkwell-footer__logo-icon {
+  transform: rotate(-6deg) scale(1.05);
+}
+.inkwell-footer__logo-text {
+  @apply font-display text-lg font-bold text-slate-900;
+}
+.dark .inkwell-footer__logo-text {
+  @apply text-white;
+}
+
+.inkwell-footer__description {
+  @apply max-w-xs text-[13px] leading-relaxed text-slate-500;
+}
+.dark .inkwell-footer__description {
+  @apply text-slate-400;
+}
+
+/* ─── Social Links ──────────────────────────── */
+.inkwell-footer__social-row {
+  @apply flex items-center gap-1.5;
+}
+.inkwell-footer__social-btn {
+  @apply flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-all duration-200;
+}
+.inkwell-footer__social-btn:hover {
+  @apply border-brand/40 bg-brand-50 text-brand shadow-sm;
+  transform: translateY(-2px);
+}
+.dark .inkwell-footer__social-btn {
+  @apply border-slate-700 text-slate-400;
+}
+.dark .inkwell-footer__social-btn:hover {
+  @apply border-brand-700 bg-brand-950 text-brand-400;
+}
+
+/* ─── Column Headings ───────────────────────── */
+.inkwell-footer__col-heading {
+  @apply mb-3 text-[11px] font-semibold uppercase tracking-widest text-slate-900;
+}
+.dark .inkwell-footer__col-heading {
+  @apply text-slate-200;
+}
+
+/* ─── Link Lists ────────────────────────────── */
+.inkwell-footer__link-list {
+  @apply space-y-2;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.inkwell-footer__link {
+  @apply inline-flex items-center gap-1.5 text-[13px] text-slate-500 no-underline transition-all duration-200 cursor-pointer;
+}
+.inkwell-footer__link:hover {
+  @apply text-brand;
+  transform: translateX(3px);
+}
+.dark .inkwell-footer__link {
+  @apply text-slate-400;
+}
+.dark .inkwell-footer__link:hover {
+  @apply text-brand-400;
+}
+.inkwell-footer__link-arrow {
+  @apply opacity-0 transition-opacity duration-200;
+}
+.inkwell-footer__link:hover .inkwell-footer__link-arrow {
+  @apply opacity-100;
+}
+
+/* ─── Compact Contact Section ───────────────── */
+.inkwell-footer__contact-compact {
+  @apply mt-4 space-y-2;
+}
+
+.inkwell-footer__contact-list {
+  @apply space-y-2.5;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.inkwell-footer__contact-item {
+  @apply flex items-center gap-2 text-[13px] text-slate-500 no-underline transition-colors duration-200;
+}
+.inkwell-footer__contact-item:hover {
+  @apply text-brand;
+}
+.dark .inkwell-footer__contact-item {
+  @apply text-slate-400;
+}
+.dark .inkwell-footer__contact-item:hover {
+  @apply text-brand-400;
+}
+.inkwell-footer__contact-icon {
+  @apply shrink-0 text-brand/60;
+}
+.dark .inkwell-footer__contact-icon {
+  @apply text-brand-400/60;
+}
+
+/* ─── Bottom Bar ────────────────────────────── */
+.inkwell-footer__divider {
+  @apply border-t border-slate-200/60;
+}
+.dark .inkwell-footer__divider {
+  @apply border-slate-800/60;
+}
+
+.inkwell-footer__bottom {
+  @apply flex flex-col items-center justify-between gap-1.5 py-4 text-xs text-slate-400 sm:flex-row;
+}
+.dark .inkwell-footer__bottom {
+  @apply text-slate-500;
+}
+
+.inkwell-footer__copyright {
+  @apply font-medium;
+}
+
+.inkwell-footer__bottom-links {
+  @apply flex items-center gap-1;
+}
+
+.inkwell-footer__bottom-link {
+  @apply text-xs text-slate-400 no-underline transition-colors duration-200 hover:text-brand cursor-pointer;
+}
+.dark .inkwell-footer__bottom-link {
+  @apply text-slate-500 hover:text-brand-400;
+}
+
+.inkwell-footer__bottom-sep {
+  @apply text-slate-300 mx-0.5;
+}
+.dark .inkwell-footer__bottom-sep {
+  @apply text-slate-700;
+}
+
+.inkwell-footer__tagline {
+  @apply text-slate-400;
+}
+.dark .inkwell-footer__tagline {
+  @apply text-slate-500;
+}

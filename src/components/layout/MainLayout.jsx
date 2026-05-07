@@ -10,6 +10,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { resolveDashboardLabel, resolveDashboardPath } from '../../utils/navigation';
 import { FeedbackWidget } from '../ui/FeedbackWidget';
+import { Footer } from './Footer';
 
 // Defines main layout so related behavior stays grouped in one place.
 export function MainLayout() {
@@ -229,11 +230,7 @@ export function MainLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white px-4 py-8 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl text-center text-sm text-slate-500 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} InkWell Publishing Platform. Built with React, Spring Boot & Microservices.</p>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Global Feedback Widget */}
       <FeedbackWidget />

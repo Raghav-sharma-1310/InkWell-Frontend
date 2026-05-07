@@ -3,15 +3,24 @@
  * The comments explain what major functions, components, and helpers do and why they are used.
  */
 import { useEffect, useState } from 'react';
-import { Shield, ShieldOff, Trash2, UserCheck, UserX, Search, Crown } from 'lucide-react';
+import { Shield, ShieldOff, Trash2, UserCheck, UserX, Search, Crown, ShieldAlert, ShieldMinus } from 'lucide-react';
 import api from '../../api/client';
 import { PageLoader } from '../../components/ui/LoadingSpinner';
+import { useAuth } from '../../context/AuthContext';
+
+// The seeded default admin email — must match AdminSeeder on the backend
+const DEFAULT_ADMIN_EMAIL = 'admin@inkwell.dev';
 
 // Defines admin users page so related behavior stays grouped in one place.
 export function AdminUsersPage() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [consoleError, setConsoleError] = useState('');
+
+  // True when the currently logged-in user is the seeded default admin
+  const isDefaultAdmin = currentUser?.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase();
 
   // Performs the load workflow so callers do not duplicate this logic.
   const load = () =>
@@ -44,7 +53,38 @@ export function AdminUsersPage() {
     await load();
   };
 
+  // --- Admin Console actions (default admin only) ---
+
+  // Removes ADMIN role from another admin — demotes them to READER
+  const removeAdminRole = async (adminId, email) => {
+    if (!confirm(`Remove admin role from ${email}? They will become a Reader.`)) return;
+    setConsoleError('');
+    try {
+      await api.put(`/api/auth/admin/console/admins/${adminId}/remove-role`);
+      await load();
+    } catch (err) {
+      setConsoleError(err.response?.data?.message || 'Failed to remove admin role.');
+    }
+  };
+
+  // Deletes another admin account permanently
+  const deleteAdmin = async (adminId, email) => {
+    if (!confirm(`Permanently DELETE admin account ${email}? This cannot be undone.`)) return;
+    setConsoleError('');
+    try {
+      await api.delete(`/api/auth/admin/console/admins/${adminId}`);
+      await load();
+    } catch (err) {
+      setConsoleError(err.response?.data?.message || 'Failed to delete admin.');
+    }
+  };
+
   if (loading) return <PageLoader />;
+
+  // Other admins the default admin can manage (excludes themselves)
+  const manageableAdmins = users.filter(
+    (u) => u.role === 'ADMIN' && u.email?.toLowerCase() !== DEFAULT_ADMIN_EMAIL.toLowerCase()
+  );
 
   const filteredUsers = users.filter(
     (u) =>
@@ -62,6 +102,85 @@ export function AdminUsersPage() {
       <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
         {users.length} total · {totalActive} active · {totalSuspended} suspended
       </p>
+
+      {/* ── Admin Console Panel (default admin only) ── */}
+      {isDefaultAdmin && (
+        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50/60 p-5 dark:border-amber-800/60 dark:bg-amber-900/10">
+          <div className="mb-4 flex items-center gap-2">
+            <ShieldAlert size={20} className="text-amber-600 dark:text-amber-400" />
+            <h2 className="text-base font-semibold text-amber-800 dark:text-amber-300">
+              Admin Console — Manage Other Admins
+            </h2>
+            <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
+              Default Admin Only
+            </span>
+          </div>
+
+          {consoleError && (
+            <p className="mb-3 rounded-lg bg-red-100 px-4 py-2 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
+              {consoleError}
+            </p>
+          )}
+
+          {manageableAdmins.length === 0 ? (
+            <p className="text-sm text-slate-500 dark:text-slate-400">No other admin accounts found.</p>
+          ) : (
+            <div className="overflow-hidden rounded-lg border border-amber-100 bg-white dark:border-amber-900/30 dark:bg-slate-900/60">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-amber-50 text-xs uppercase text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
+                  <tr>
+                    <th className="px-5 py-3 font-semibold">Admin</th>
+                    <th className="px-5 py-3 font-semibold">Email</th>
+                    <th className="px-5 py-3 text-right font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-amber-50 dark:divide-amber-900/20">
+                  {manageableAdmins.map((a) => (
+                    <tr key={a.userId} className="transition-colors hover:bg-amber-50/40 dark:hover:bg-amber-900/10">
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                            {a.fullName?.[0]?.toUpperCase() || '?'}
+                          </div>
+                          <span className="font-medium text-slate-900 dark:text-white">{a.fullName}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3 text-xs text-slate-500 dark:text-slate-400">
+                        {a.email} · @{a.username}
+                      </td>
+                      <td className="px-5 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {/* Demote this admin back to Reader */}
+                          <button
+                            id={`console-remove-role-${a.userId}`}
+                            onClick={() => removeAdminRole(a.userId, a.email)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:bg-transparent dark:text-amber-400 dark:hover:bg-amber-900/20"
+                            title="Remove admin role (demote to Reader)"
+                          >
+                            <ShieldMinus size={13} />
+                            Remove Role
+                          </button>
+
+                          {/* Permanently delete this admin account */}
+                          <button
+                            id={`console-delete-admin-${a.userId}`}
+                            onClick={() => deleteAdmin(a.userId, a.email)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:bg-transparent dark:text-red-400 dark:hover:bg-red-900/20"
+                            title="Delete this admin account"
+                          >
+                            <Trash2 size={13} />
+                            Delete Admin
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative mt-6">

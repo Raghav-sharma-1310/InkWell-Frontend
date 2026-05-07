@@ -1,0 +1,177 @@
+/*
+ * Styles for the InfoModal component used by footer information links.
+ * Uses BEM naming convention to avoid conflicts with existing styles.
+ */
+
+/* ─── Overlay ──────────────────────────────── */
+.info-modal__overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: infoModalFadeIn 0.2s ease-out;
+}
+
+@keyframes infoModalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ─── Container ────────────────────────────── */
+.info-modal__container {
+  @apply relative w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-2xl;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: infoModalSlideUp 0.25s ease-out;
+}
+.dark .info-modal__container {
+  @apply border-slate-700 bg-slate-900;
+}
+
+@keyframes infoModalSlideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Header ───────────────────────────────── */
+.info-modal__header {
+  @apply flex items-center justify-between border-b border-slate-200 px-6 py-4;
+  flex-shrink: 0;
+}
+.dark .info-modal__header {
+  @apply border-slate-700;
+}
+
+.info-modal__title {
+  @apply font-display text-lg font-bold text-slate-900;
+}
+.dark .info-modal__title {
+  @apply text-white;
+}
+
+.info-modal__close {
+  @apply flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-slate-700;
+}
+.dark .info-modal__close {
+  @apply text-slate-500 hover:bg-slate-800 hover:text-slate-200;
+}
+
+/* ─── Body ─────────────────────────────────── */
+.info-modal__body {
+  @apply overflow-y-auto px-6 py-5;
+  flex: 1;
+}
+
+/* ─── Content Styling ──────────────────────── */
+.info-modal__content h3 {
+  @apply mt-5 mb-2 font-display text-sm font-bold uppercase tracking-wide text-brand;
+}
+.dark .info-modal__content h3 {
+  @apply text-brand-400;
+}
+
+.info-modal__content p {
+  @apply mb-3 text-sm leading-relaxed text-slate-600;
+}
+.dark .info-modal__content p {
+  @apply text-slate-400;
+}
+
+.info-modal__content ul {
+  @apply mb-3 space-y-1.5 pl-5 text-sm text-slate-600;
+  list-style-type: disc;
+}
+.dark .info-modal__content ul {
+  @apply text-slate-400;
+}
+
+.info-modal__content li {
+  @apply leading-relaxed;
+}
+
+.info-modal__content a {
+  @apply font-medium text-brand underline decoration-brand/30 underline-offset-2 transition-colors hover:text-brand-800 hover:decoration-brand/60;
+}
+.dark .info-modal__content a {
+  @apply text-brand-400 hover:text-brand-300;
+}
+
+.info-modal__content strong {
+  @apply font-semibold text-slate-800;
+}
+.dark .info-modal__content strong {
+  @apply text-slate-200;
+}
+
+.info-modal__updated {
+  @apply mb-4 inline-block rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500;
+}
+.dark .info-modal__updated {
+  @apply bg-slate-800 text-slate-400;
+}
+
+/* ─── Contact Grid ─────────────────────────── */
+.info-modal__contact-grid {
+  @apply my-4 grid gap-3;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .info-modal__contact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.info-modal__contact-card {
+  @apply rounded-xl border border-slate-200 p-4;
+}
+.dark .info-modal__contact-card {
+  @apply border-slate-700 bg-slate-800/50;
+}
+
+.info-modal__contact-card h4 {
+  @apply mb-1 text-sm font-semibold text-slate-800;
+}
+.dark .info-modal__contact-card h4 {
+  @apply text-slate-200;
+}
+
+.info-modal__contact-card p {
+  @apply mb-1 text-xs text-slate-500;
+}
+
+.info-modal__contact-card a {
+  @apply text-sm font-medium text-brand transition-colors hover:text-brand-800;
+}
+.dark .info-modal__contact-card a {
+  @apply text-brand-400 hover:text-brand-300;
+}
+
+/* ─── Careers List ─────────────────────────── */
+.info-modal__careers-list {
+  @apply my-4 space-y-3;
+}
+
+.info-modal__career-item {
+  @apply flex flex-wrap items-baseline justify-between gap-2 rounded-xl border border-slate-200 px-4 py-3;
+}
+.dark .info-modal__career-item {
+  @apply border-slate-700 bg-slate-800/50;
+}
+
+.info-modal__career-item h4 {
+  @apply text-sm font-semibold text-slate-800;
+}
+.dark .info-modal__career-item h4 {
+  @apply text-slate-200;
+}
+
+.info-modal__career-item p {
+  @apply mb-0 text-xs text-slate-500;
+}
+
+.info-modal__career-tag {
+  @apply inline-block rounded-md bg-brand-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-700;
+}
+.dark .info-modal__career-tag {
+  @apply bg-brand-950 text-brand-300;
+}
