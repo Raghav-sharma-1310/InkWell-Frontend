@@ -228,21 +228,21 @@ The root `Jenkinsfile`:
 Important Jenkins parameter:
 
 ```text
-VITE_API_BASE_URL=http://13.48.192.178:8080
+VITE_API_BASE_URL=http://51.21.94.139.nip.io:8080
 ```
 
 Important EC2 `.env` values:
 
 ```env
-FRONTEND_URL=http://13.48.192.178
-PUBLIC_GATEWAY_URL=http://13.48.192.178
-VITE_API_BASE_URL=/
+FRONTEND_URL=http://51.21.94.139.nip.io
+PUBLIC_GATEWAY_URL=http://51.21.94.139.nip.io:8080
+VITE_API_BASE_URL=http://51.21.94.139.nip.io:8080
 ```
 
 Open the deployed frontend at:
 
 ```text
-http://13.48.192.178
+http://51.21.94.139.nip.io
 ```
 
 ## Troubleshooting
