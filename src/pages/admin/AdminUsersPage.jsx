@@ -18,6 +18,7 @@ export function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [consoleError, setConsoleError] = useState('');
+  const [actionError, setActionError] = useState('');
 
   // True when the currently logged-in user is the seeded default admin
   const isDefaultAdmin = currentUser?.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase();
@@ -30,27 +31,47 @@ export function AdminUsersPage() {
 
   // Defines promote so related behavior stays grouped in one place.
   const promote = async (userId, role) => {
-    await api.patch(`/api/auth/admin/users/${userId}/role`, { role });
-    await load();
+    setActionError('');
+    try {
+      await api.patch(`/api/auth/admin/users/${userId}/role`, { role });
+      await load();
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Failed to update user role.');
+    }
   };
 
   // Defines suspend so related behavior stays grouped in one place.
   const suspend = async (userId) => {
-    await api.patch(`/api/auth/admin/users/${userId}/suspend`);
-    await load();
+    setActionError('');
+    try {
+      await api.patch(`/api/auth/admin/users/${userId}/suspend`);
+      await load();
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Failed to suspend user.');
+    }
   };
 
   // Defines reactivate so related behavior stays grouped in one place.
   const reactivate = async (userId) => {
-    await api.patch(`/api/auth/admin/users/${userId}/reactivate`);
-    await load();
+    setActionError('');
+    try {
+      await api.patch(`/api/auth/admin/users/${userId}/reactivate`);
+      await load();
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Failed to reactivate user.');
+    }
   };
 
   // Performs the delete user workflow so callers do not duplicate this logic.
   const deleteUser = async (userId, email) => {
     if (!confirm(`Are you sure you want to permanently delete ${email}?`)) return;
-    await api.delete(`/api/auth/admin/users/${userId}`);
-    await load();
+    setActionError('');
+    try {
+      await api.delete(`/api/auth/admin/users/${userId}`);
+      await load();
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Failed to delete user.');
+    }
   };
 
   // --- Admin Console actions (default admin only) ---
@@ -207,6 +228,20 @@ export function AdminUsersPage() {
           </div>
         ))}
       </div>
+
+      {/* Action Error Banner */}
+      {actionError && (
+        <div className="mt-6 flex items-center justify-between rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
+          <span>{actionError}</span>
+          <button
+            onClick={() => setActionError('')}
+            className="ml-4 rounded p-1 text-red-500 hover:bg-red-200 dark:hover:bg-red-900/40"
+            title="Dismiss"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* User Table */}
       <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
